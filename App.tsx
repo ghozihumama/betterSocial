@@ -1,9 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
-import FeedScreen from './src/screens/FeedScreen';
-import PostDetailScreen from './src/screens/PostDetailScreen';
+import {FeedScreen, PostDetailScreen} from './src/screens';
 
 const Stack = createNativeStackNavigator();
 

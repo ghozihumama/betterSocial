@@ -20,7 +20,7 @@ import IconShare from '../assets/share.png';
 import IconUpvoteActive from '../assets/upvote_active.png';
 import IconUpvoteInactive from '../assets/upvote_inactive.png';
 
-function PostDetailScreen() {
+export const PostDetailScreen: React.FC = () => {
   const navigation = useNavigation();
   return (
     <SafeAreaView>
@@ -262,6 +262,6 @@ function PostDetailScreen() {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 export default PostDetailScreen;
