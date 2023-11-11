@@ -5,7 +5,26 @@ import {btsImage} from '../assets';
 import {BtsImageIcon, BtsReadMore} from '../atoms';
 const MAX_NUM_OF_LINES = 3;
 
-export const PostingCard: React.FC = () => {
+interface PropsPostingCard {
+  imageProfileUrl: string;
+  name: string;
+  createdAt: string;
+  description: string;
+  imageUrl: string;
+  comments: Array<string>;
+  downvote: Array<number>;
+  upvote: Array<number>;
+}
+export const PostingCard: React.FC<PropsPostingCard> = ({
+  imageProfileUrl,
+  name,
+  createdAt,
+  description,
+  imageUrl,
+  comments,
+  downvote,
+  upvote,
+}) => {
   const navigation = useNavigation();
   const [isTruncated, setIsTruncated] = useState(true);
   const [numberOfLine, setNumberOfLine] = useState<number>(1);
@@ -16,15 +35,15 @@ export const PostingCard: React.FC = () => {
         <View style={styles.header}>
           <Image
             source={{
-              uri: 'https://picsum.photos/200',
+              uri: imageProfileUrl,
             }}
             width={48}
             height={48}
             style={styles.avatar}
           />
           <View style={styles.sectionLeftHeader}>
-            <Text style={styles.name}>Usup Suparma</Text>
-            <Text style={styles.date}>Mar 27, 2023</Text>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.date}>{createdAt}</Text>
           </View>
         </View>
         <View style={styles.headerDivider} />
@@ -37,13 +56,7 @@ export const PostingCard: React.FC = () => {
               isTruncated ? MAX_NUM_OF_LINES : Number.MAX_SAFE_INTEGER
             }
             style={{marginHorizontal: 24, marginTop: 24}}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-            luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-            consectetur adipiscing elit. Nulla luctus in ipsum ac dictum.
-            Integer et nunc ut tellus tinci, consectetur adipiscing elit. Nulla
-            luctus in ipsum ac dictum. Integer et nunc ut tellus tinci Nulla
-            luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-            consectetur adipiscing elit. Nulla luctus in ipsum ac dictum.
+            {description}
           </Text>
           {MAX_NUM_OF_LINES < numberOfLine ? (
             <View style={{marginHorizontal: 24, marginBottom: 24}}>
@@ -55,7 +68,7 @@ export const PostingCard: React.FC = () => {
           ) : null}
           <Image
             source={{
-              uri: 'https://picsum.photos/200',
+              uri: imageUrl,
             }}
             height={200}
           />
@@ -80,7 +93,7 @@ export const PostingCard: React.FC = () => {
                 marginHorizontal: 4,
                 textAlign: 'center',
               }}>
-              0
+              {Array.isArray(comments) ? comments.length : 0}
             </Text>
           </View>
           <View
@@ -100,13 +113,21 @@ export const PostingCard: React.FC = () => {
                 marginHorizontal: 11,
                 textAlign: 'center',
               }}>
-              0
+              {Array.isArray(downvote) ? downvote.length : 0}
             </Text>
             <BtsImageIcon
               isPressable
               onPress={() => console.log('upvote')}
               source={btsImage.upvoteInactive}
             />
+            <Text
+              style={{
+                width: 24,
+                marginHorizontal: 11,
+                textAlign: 'center',
+              }}>
+              {Array.isArray(upvote) ? downvote.length : 0}
+            </Text>
           </View>
         </View>
       </View>
@@ -117,7 +138,7 @@ export const PostingCard: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 547,
+    flex: 1,
   },
   header: {
     height: 64,
