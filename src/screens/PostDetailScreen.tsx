@@ -1,48 +1,47 @@
-import React, {useEffect} from 'react';
+import React, {useContext} from 'react';
 import {
   Button,
   Image,
-  Pressable,
   SafeAreaView,
-  ScrollView,
   Text,
   TextInput,
   View,
+  FlatList,
 } from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigations/StackNavigator';
+import {BtsSectionActions} from '../moleculs';
+import {BtsImageIcon} from '../atoms';
+import {btsImage} from '../assets';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PostDetailScreen'>;
 
-import IconBack from '../assets/back.png';
-import IconBlock from '../assets/block.png';
-import IconComment from '../assets/comment.png';
-import IconDownvoteInactive from '../assets/downvote_inactive.png';
-import IconShare from '../assets/share.png';
-import IconUpvoteInactive from '../assets/upvote_inactive.png';
+import {Context} from '../stores/context';
 
 export const PostDetailScreen: React.FC<Props> = ({route, navigation}) => {
-  useEffect(() => {
-    console.log({route});
-  }, []);
+  const {state} = useContext(Context);
+  const feedById = state.feeds.find(feed => feed.id === route.params.id);
+
+  if (!feedById) {
+    return <View />;
+  }
+
   return (
     <SafeAreaView>
-      <ScrollView style={{marginBottom: 48}}>
+      <View style={{marginBottom: 48}}>
         <View>
+          {/* Header */}
           <View
             style={{
               height: 64,
               alignItems: 'center',
               flexDirection: 'row',
             }}>
-            <Pressable onPress={() => navigation.goBack()}>
-              <Image
-                source={IconBack}
-                height={18}
-                width={18}
-                style={{marginLeft: 22}}
-              />
-            </Pressable>
+            <BtsImageIcon
+              isPressable
+              onPress={() => navigation.goBack()}
+              source={btsImage.back}
+            />
             <Image
               source={{
                 uri: route.params.imageProfileUrl,
@@ -53,7 +52,11 @@ export const PostDetailScreen: React.FC<Props> = ({route, navigation}) => {
             />
             <View style={{marginLeft: 16}}>
               <Text
-                style={{fontWeight: '600', fontSize: 14, lineHeight: 16.94}}>
+                style={{
+                  fontWeight: '600',
+                  fontSize: 14,
+                  lineHeight: 16.94,
+                }}>
                 {route.params.name}
               </Text>
               <Text style={{fontWeight: '400', fontSize: 12, lineHeight: 18}}>
@@ -61,6 +64,7 @@ export const PostDetailScreen: React.FC<Props> = ({route, navigation}) => {
               </Text>
             </View>
           </View>
+          {/* Desc and Image */}
           <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
           <View>
             <Text style={{margin: 24}}>{route.params.description}</Text>
@@ -71,199 +75,66 @@ export const PostDetailScreen: React.FC<Props> = ({route, navigation}) => {
               height={200}
             />
           </View>
-          <View
-            style={{
-              height: 52,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                flex: 1,
-              }}>
-              <Image
-                source={IconShare}
-                height={18}
-                width={18}
-                style={{marginLeft: 22}}
-              />
-              <Image
-                source={IconComment}
-                height={18}
-                width={18}
-                style={{marginLeft: 24}}
-              />
-              <Text
+          {/* Footer */}
+          <BtsSectionActions
+            feedId={feedById.id}
+            comments={feedById.comments}
+            downvote={feedById.downvote}
+            upvote={feedById.upvote}
+          />
+        </View>
+        <FlatList
+          data={feedById ? feedById.comments : []}
+          keyExtractor={(__, idx) => idx.toString()}
+          renderItem={({index, item}) => (
+            <React.Fragment key={index}>
+              <View style={{height: 4, backgroundColor: '#C4C4C4'}} />
+              <View
                 style={{
-                  width: 24,
-                  marginHorizontal: 4,
-                  textAlign: 'center',
+                  flexDirection: 'row',
+                  minHeight: 72,
+                  paddingVertical: 16,
+                  paddingHorizontal: 24,
                 }}>
-                {Array.isArray(route.params.comments)
-                  ? route.params.comments.length
-                  : 0}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={IconBlock}
-                height={18}
-                width={18}
-                style={{marginLeft: 22}}
-              />
-              <Pressable onPress={() => console.log('downvote')}>
                 <Image
-                  source={IconDownvoteInactive}
-                  height={18}
-                  width={18}
-                  style={{marginLeft: 24}}
+                  source={{
+                    uri: item.imageProfileUrl,
+                  }}
+                  width={36}
+                  height={36}
+                  style={{borderRadius: 24, marginRight: 16}}
                 />
-              </Pressable>
-              <Text
-                style={{
-                  width: 24,
-                  marginHorizontal: 11,
-                  textAlign: 'center',
-                }}>
-                {Array.isArray(route.params.downvote)
-                  ? route.params.downvote.length
-                  : 0}
-              </Text>
-              <Pressable onPress={() => console.log('upvote')}>
-                <Image
-                  source={IconUpvoteInactive}
-                  height={18}
-                  width={18}
-                  style={{marginRight: 22}}
-                />
-              </Pressable>
-              <Text
-                style={{
-                  width: 24,
-                  marginHorizontal: 11,
-                  textAlign: 'center',
-                }}>
-                {Array.isArray(route.params.upvote)
-                  ? route.params.upvote.length
-                  : 0}
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View style={{height: 4, backgroundColor: '#C4C4C4'}} />
-        <View
-          style={{
-            flexDirection: 'row',
-            minHeight: 72,
-            paddingVertical: 16,
-            paddingHorizontal: 24,
-          }}>
-          <Image
-            source={{
-              uri: 'https://picsum.photos/200',
-            }}
-            width={36}
-            height={36}
-            style={{borderRadius: 24, marginRight: 16}}
-          />
-          <View style={{width: '90%'}}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: 12,
-                lineHeight: 14.52,
-                color: '#828282',
-              }}>
-              Usup Suparma
-            </Text>
-            <Text style={{fontWeight: '400', fontSize: 16, lineHeight: 19.36}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-            </Text>
-          </View>
-        </View>
-        <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
-        <View
-          style={{
-            flexDirection: 'row',
-            minHeight: 72,
-            paddingVertical: 16,
-            paddingHorizontal: 24,
-          }}>
-          <Image
-            source={{
-              uri: 'https://picsum.photos/200',
-            }}
-            width={36}
-            height={36}
-            style={{borderRadius: 24, marginRight: 16}}
-          />
-          <View style={{width: '90%'}}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: 12,
-                lineHeight: 14.52,
-                color: '#828282',
-              }}>
-              Usup Suparma
-            </Text>
-            <Text style={{fontWeight: '400', fontSize: 16, lineHeight: 19.36}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-            </Text>
-          </View>
-        </View>
-        <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
-        <View
-          style={{
-            flexDirection: 'row',
-            minHeight: 72,
-            paddingVertical: 16,
-            paddingHorizontal: 24,
-          }}>
-          <Image
-            source={{
-              uri: 'https://picsum.photos/200',
-            }}
-            width={36}
-            height={36}
-            style={{borderRadius: 24, marginRight: 16}}
-          />
-          <View style={{width: '90%'}}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: 12,
-                lineHeight: 14.52,
-                color: '#828282',
-              }}>
-              Usup Suparma
-            </Text>
-            <Text style={{fontWeight: '400', fontSize: 16, lineHeight: 19.36}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-            </Text>
-          </View>
-        </View>
-        <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
-      </ScrollView>
+                <View style={{width: '90%'}}>
+                  <Text
+                    style={{
+                      fontWeight: '600',
+                      fontSize: 12,
+                      lineHeight: 14.52,
+                      color: '#828282',
+                    }}>
+                    {item.name}
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: '400',
+                      fontSize: 16,
+                      lineHeight: 19.36,
+                    }}>
+                    {item.comment}
+                  </Text>
+                </View>
+              </View>
+            </React.Fragment>
+          )}
+        />
+      </View>
+
       <View
         style={{
-          position: 'absolute',
-          bottom: 20,
           height: 60,
           flexDirection: 'row',
           alignItems: 'center',
-          width: '100%',
           paddingHorizontal: 24,
-          zIndex: 10,
         }}>
         <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
         <TextInput placeholder="Enter Comment" style={{flex: 1}} />

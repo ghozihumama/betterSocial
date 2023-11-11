@@ -4,63 +4,75 @@ export function btsReducer(
   state: InitialStateInterface,
   action: BtsActions,
 ): InitialStateInterface {
-  const feedById: FeedInterface | undefined = state.feeds.find(
-    feed => feed.id === action.payload.feedId,
-  );
+  let feedById: FeedInterface | undefined;
+  switch (action.type) {
+    case ActionType.Downvote:
+      feedById = findFeedById(state.feeds, action.payload.feedId);
 
-  if (feedById) {
-    switch (action.type) {
-      case ActionType.Downvote:
+      if (feedById) {
         feedById.downvote = feedById.downvote.includes(action.payload.userId)
           ? feedById.downvote.filter(el => el !== action.payload.userId)
           : [...feedById.downvote, action.payload.userId];
+      }
 
-        return {
-          ...state,
-          feeds: Array.isArray(state.feeds)
-            ? state.feeds.map(feed => {
-                if (feed.id === action.payload.feedId) {
-                  return feedById;
-                }
-                return feed;
-              })
-            : [],
-        };
-      case ActionType.Upvote:
+      return {
+        ...state,
+        feeds: Array.isArray(state.feeds)
+          ? state.feeds.map(feed => {
+              if (feedById && feed.id === feedById.id) {
+                return feedById;
+              }
+              return feed;
+            })
+          : [],
+      };
+    case ActionType.Upvote:
+      feedById = findFeedById(state.feeds, action.payload.feedId);
+
+      if (feedById) {
         feedById.upvote = feedById.upvote.includes(action.payload.userId)
           ? feedById.upvote.filter(el => el !== action.payload.userId)
           : [...feedById.upvote, action.payload.userId];
+      }
 
-        return {
-          ...state,
-          feeds: Array.isArray(state.feeds)
-            ? state.feeds.map(feed => {
-                if (feed.id === action.payload.feedId) {
-                  return feedById;
-                }
-                return feed;
-              })
-            : [],
-        };
-      case ActionType.AddComment:
+      return {
+        ...state,
+        feeds: Array.isArray(state.feeds)
+          ? state.feeds.map(feed => {
+              if (feedById && feed.id === feedById.id) {
+                return feedById;
+              }
+              return feed;
+            })
+          : [],
+      };
+    case ActionType.AddComment:
+      feedById = findFeedById(state.feeds, action.payload.feedId);
+
+      if (feedById) {
         feedById.comments = [...feedById.comments, action.payload];
+      }
 
-        return {
-          ...state,
-          feeds: Array.isArray(state.feeds)
-            ? state.feeds.map(feed => {
-                if (feed.id === action.payload.feedId) {
-                  return feedById;
-                }
-                return feed;
-              })
-            : [],
-        };
+      return {
+        ...state,
+        feeds: Array.isArray(state.feeds)
+          ? state.feeds.map(feed => {
+              if (feedById && feed.id === feedById.id) {
+                return feedById;
+              }
+              return feed;
+            })
+          : [],
+      };
 
-      default:
-        return state;
-    }
+    default:
+      return state;
   }
-
-  return state;
 }
+
+const findFeedById = (
+  feeds: Array<FeedInterface>,
+  feedId: number,
+): FeedInterface | undefined => {
+  return feeds.find(feed => feed.id === feedId);
+};
