@@ -1,13 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {SafeAreaView, FlatList} from 'react-native';
 import {PostingCard} from '../components';
-import {feeds} from '../datas';
+import {Context} from '../stores/context';
 
 export const FeedScreen: React.FC = () => {
+  const {state} = useContext(Context);
   return (
     <SafeAreaView>
       <FlatList
-        data={feeds}
+        data={Array.isArray(state.feeds) ? state.feeds : []}
         keyExtractor={index => index.id.toString()}
         renderItem={({index, item}) => (
           <PostingCard

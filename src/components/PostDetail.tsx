@@ -3,6 +3,7 @@ import {Image, Pressable, Text, View, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {btsImage} from '../assets';
 import {BtsImageIcon, BtsReadMore} from '../atoms';
+import {CommentInterface} from '../stores/state';
 const MAX_NUM_OF_LINES = 3;
 
 interface PropsPostingCard {
@@ -11,7 +12,7 @@ interface PropsPostingCard {
   createdAt: string;
   description: string;
   imageUrl: string;
-  comments: Array<string>;
+  comments: Array<CommentInterface>;
   downvote: Array<number>;
   upvote: Array<number>;
 }
