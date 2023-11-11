@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Button,
   Image,
@@ -17,9 +17,11 @@ import {btsImage} from '../assets';
 type Props = NativeStackScreenProps<RootStackParamList, 'PostDetailScreen'>;
 
 import {Context} from '../stores/context';
+import {ActionType} from '../stores/actions';
 
 export const PostDetailScreen: React.FC<Props> = ({route, navigation}) => {
-  const {state} = useContext(Context);
+  const [commentValue, setComment] = useState<string>('');
+  const {state, dispatch} = useContext(Context);
   const feedById = state.feeds.find(feed => feed.id === route.params.id);
 
   if (!feedById) {
@@ -128,7 +130,6 @@ export const PostDetailScreen: React.FC<Props> = ({route, navigation}) => {
           )}
         />
       </View>
-
       <View
         style={{
           height: 60,
@@ -136,9 +137,27 @@ export const PostDetailScreen: React.FC<Props> = ({route, navigation}) => {
           alignItems: 'center',
           paddingHorizontal: 24,
         }}>
-        <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
-        <TextInput placeholder="Enter Comment" style={{flex: 1}} />
-        <Button title="Comment" onPress={() => console.log('comment')} />
+        <TextInput
+          value={commentValue}
+          onChangeText={text => setComment(text)}
+          placeholder="Enter Comment"
+          style={{flex: 1}}
+        />
+        <Button
+          disabled={commentValue === ''}
+          title="Comment"
+          onPress={() => {
+            dispatch({
+              type: ActionType.AddComment,
+              payload: {
+                ...state.user,
+                comment: commentValue,
+                feedId: feedById.id,
+              },
+            });
+            setComment('');
+          }}
+        />
       </View>
     </SafeAreaView>
   );
