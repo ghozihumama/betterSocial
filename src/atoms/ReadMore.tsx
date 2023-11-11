@@ -9,7 +9,7 @@ interface PropsReadMore {
 export const BtsReadMore: React.FC<PropsReadMore> = ({onPress, isReadMore}) => {
   return (
     <Text onPress={onPress} style={styles.textColor}>
-      {isReadMore ? 'Read more' : ' Read less'}
+      {isReadMore ? 'more' : 'less'}
     </Text>
   );
 };

@@ -46,7 +46,7 @@ export const PostingCard: React.FC = () => {
             consectetur adipiscing elit. Nulla luctus in ipsum ac dictum.
           </Text>
           {MAX_NUM_OF_LINES < numberOfLine ? (
-            <View style={{marginHorizontal: 24}}>
+            <View style={{marginHorizontal: 24, marginBottom: 24}}>
               <BtsReadMore
                 onPress={() => setIsTruncated(!isTruncated)}
                 isReadMore={isTruncated}
