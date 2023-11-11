@@ -157,3 +157,10 @@ h. **Pemantauan Error:**
 Dengan kombinasi metode pengujian ini, Anda dapat mendapatkan pemahaman yang lebih baik tentang efektivitas fitur rekomendasi teman dan membuat perbaikan atau peningkatan berdasarkan hasil pengujian.
 
 Answer C2:
+untuk menemukan saran terbaik bagi pengguna
+
+1. Create user / profile terlebih dahulu, minta pengguna untuk create interest
+2. System akan mengolah data bersadarkan beberapa parameter yang telah diinput oleh user misalkan (lokasi, minat, aktivitas terkini)
+3. Jika lokasi dan minat user belum pernah ada pada database. maka akan disimpan pada database
+4. Jika minat terlalu banyak maka bisa dibuatkan skala prioritas
+5. System bisa sarankan membuat initial saran ketpada user baru
