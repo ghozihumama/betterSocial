@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Button,
   Image,
@@ -9,7 +9,10 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../navigations/StackNavigator';
+
+type Props = NativeStackScreenProps<RootStackParamList, 'PostDetailScreen'>;
 
 import IconBack from '../assets/back.png';
 import IconBlock from '../assets/block.png';
@@ -18,8 +21,10 @@ import IconDownvoteInactive from '../assets/downvote_inactive.png';
 import IconShare from '../assets/share.png';
 import IconUpvoteInactive from '../assets/upvote_inactive.png';
 
-export const PostDetailScreen: React.FC = () => {
-  const navigation = useNavigation();
+export const PostDetailScreen: React.FC<Props> = ({route, navigation}) => {
+  useEffect(() => {
+    console.log({route});
+  }, []);
   return (
     <SafeAreaView>
       <ScrollView style={{marginBottom: 48}}>
@@ -40,7 +45,7 @@ export const PostDetailScreen: React.FC = () => {
             </Pressable>
             <Image
               source={{
-                uri: 'https://picsum.photos/200',
+                uri: route.params.imageProfileUrl,
               }}
               width={48}
               height={48}
@@ -49,27 +54,19 @@ export const PostDetailScreen: React.FC = () => {
             <View style={{marginLeft: 16}}>
               <Text
                 style={{fontWeight: '600', fontSize: 14, lineHeight: 16.94}}>
-                Usup Suparma
+                {route.params.name}
               </Text>
               <Text style={{fontWeight: '400', fontSize: 12, lineHeight: 18}}>
-                Mar 27, 2023
+                {route.params.createdAt}
               </Text>
             </View>
           </View>
           <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
           <View>
-            <Text style={{margin: 24}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-              consectetur adipiscing elit. Nulla luctus in ipsum ac dictum.
-              Integer et nunc ut tellus tinci, consectetur adipiscing elit.
-              Nulla luctus in ipsum ac dictum. Integer et nunc ut tellus tinci
-              Nulla luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-              consectetur adipiscing elit. Nulla luctus in ipsum ac dictum.
-            </Text>
+            <Text style={{margin: 24}}>{route.params.description}</Text>
             <Image
               source={{
-                uri: 'https://picsum.photos/200',
+                uri: route.params.imageUrl,
               }}
               height={200}
             />
@@ -104,7 +101,9 @@ export const PostDetailScreen: React.FC = () => {
                   marginHorizontal: 4,
                   textAlign: 'center',
                 }}>
-                0
+                {Array.isArray(route.params.comments)
+                  ? route.params.comments.length
+                  : 0}
               </Text>
             </View>
             <View
@@ -132,7 +131,9 @@ export const PostDetailScreen: React.FC = () => {
                   marginHorizontal: 11,
                   textAlign: 'center',
                 }}>
-                0
+                {Array.isArray(route.params.downvote)
+                  ? route.params.downvote.length
+                  : 0}
               </Text>
               <Pressable onPress={() => console.log('upvote')}>
                 <Image
@@ -142,6 +143,16 @@ export const PostDetailScreen: React.FC = () => {
                   style={{marginRight: 22}}
                 />
               </Pressable>
+              <Text
+                style={{
+                  width: 24,
+                  marginHorizontal: 11,
+                  textAlign: 'center',
+                }}>
+                {Array.isArray(route.params.upvote)
+                  ? route.params.upvote.length
+                  : 0}
+              </Text>
             </View>
           </View>
         </View>

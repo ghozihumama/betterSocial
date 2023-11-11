@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {Image, Pressable, Text, View, StyleSheet} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {btsImage} from '../assets';
 import {BtsImageIcon, BtsReadMore} from '../atoms';
 import {CommentInterface} from '../stores/state';
+import {NavigationAction} from '../navigations/RootNavigation';
 const MAX_NUM_OF_LINES = 3;
 
 interface PropsPostingCard {
+  id: number;
   imageProfileUrl: string;
   name: string;
   createdAt: string;
@@ -17,6 +18,7 @@ interface PropsPostingCard {
   upvote: Array<number>;
 }
 export const PostingCard: React.FC<PropsPostingCard> = ({
+  id,
   imageProfileUrl,
   name,
   createdAt,
@@ -26,12 +28,24 @@ export const PostingCard: React.FC<PropsPostingCard> = ({
   downvote,
   upvote,
 }) => {
-  const navigation = useNavigation();
   const [isTruncated, setIsTruncated] = useState(true);
   const [numberOfLine, setNumberOfLine] = useState<number>(1);
 
   return (
-    <Pressable onPress={() => navigation.navigate('post-detail')}>
+    <Pressable
+      onPress={() =>
+        NavigationAction.navigateToPostDetailScreen({
+          id,
+          imageProfileUrl,
+          name,
+          createdAt,
+          description,
+          imageUrl,
+          comments,
+          downvote,
+          upvote,
+        })
+      }>
       <View style={styles.container}>
         <View style={styles.header}>
           <Image

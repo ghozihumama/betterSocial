@@ -13,6 +13,7 @@ export const FeedScreen: React.FC = () => {
         renderItem={({index, item}) => (
           <PostingCard
             key={index}
+            id={item.id}
             imageProfileUrl={item.imageProfileUrl}
             name={item.name}
             createdAt={item.createdAt}
